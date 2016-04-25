@@ -1,7 +1,7 @@
 {
   "name": "fms",
   "description": "test",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "homepage": "https://github.com/geistinteractive/feathers-filemaker",
   "main": "lib/",
   "keywords": [
@@ -19,7 +19,9 @@
     "email": "todd@geistinteractive.com",
     "url": "https://geistinteractive.com"
   },
-  "contributors": ["todd@geistinteractive.com"],
+  "contributors": [
+    "todd@geistinteractive.com"
+  ],
   "bugs": {
     "url": "https://github.com/geistinteractive/feathers-filemaker/issues"
   },
