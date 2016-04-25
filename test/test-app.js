@@ -17,7 +17,7 @@ const app = feathers()
 
 
 const connection = {
-  host : 'quest.geistinteractive.net',
+  host : 'localhost',
   db : 'Test',
   user: 'admin',
   pass: 'admin'

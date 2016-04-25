@@ -8,7 +8,7 @@ var fms = require('../lib');
 
 
 const connection = {
-  host : 'quest.geistinteractive.net',
+  host : 'localhost',
   db : 'Test',
   user: 'admin',
   pass: 'admin'
