@@ -6,19 +6,15 @@
  */
 
 const rp = require('request-promise');
-const Promise = require('bluebird');// jshint ignore:line
-const xml2js = require('xml2js');
-
-
 const formatterNew = require('./formaterWithValues');
-const FileMakerServerError = require('./FileMakerServerError');
 const errors = require('feathers-errors');
 const qs = require('querystring');
+
+
 
 //const XML_END_POINT_OLD = '/fmi/xml/fmresultset.xml';
 const XML_END_POINT = '/fmi/xml/FMPXMLRESULT.xml';
 
-Promise.promisifyAll( xml2js );
 
 /**
  * default server address
@@ -27,23 +23,21 @@ Promise.promisifyAll( xml2js );
 let server = 'localhost';
 
 
-const format = (json) =>{
-  return formatter(json.fmresultset);
-};
-
 const handleHTTPResponse = (httpResponse)=>{
 
   if(httpResponse.statusCode === 401){
-    throw new errors.NotAuthenticated('Invalid User name and or password')
+    throw new errors.NotAuthenticated('Invalid User name and or password');
   }else{
     return httpResponse.body;
   }
-}
+};
 
 
 const convertToJSON = (xml)=>{
 
-  if (xml === '') throw new Error('FileMaker Server Web Publishing Engine may need to be restarted');
+  if (xml === '') {
+    throw new Error('FileMaker Server Web Publishing Engine may need to be restarted');
+  }
   return formatterNew(xml);
 };
 
@@ -69,8 +63,6 @@ const handleFileMakerErrors = (jsonResponse)=>{
  */
 module.exports.request = (options) =>{
 
-  const fmquerystring = qs.stringify(options.qs);
-
   options.uri = 'https://' + server + XML_END_POINT;
   options.strictSSL=false;
   options.resolveWithFullResponse = true;
@@ -88,7 +80,7 @@ module.exports.request = (options) =>{
       if(options.qs){
         return {
           method : options.method,
-          url : options.uri + "?" + qs.stringify(options.qs)
+          url : options.uri + '?' + qs.stringify(options.qs)
         };
       }else {
         return {

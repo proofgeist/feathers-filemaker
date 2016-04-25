@@ -19,7 +19,7 @@ const model  = {
 };
 
 
-const app = feathers()
+const app = feathers();
 app.use('/people', fms({
   model, connection
 }));
