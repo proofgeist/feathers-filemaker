@@ -1,6 +1,6 @@
 {
   "name": "feathers-filemaker",
-  "description": "test",
+  "description": "Filemaker adapter for feathers.js",
   "version": "0.1.2",
   "homepage": "https://github.com/geistinteractive/feathers-filemaker",
   "main": "lib/",
