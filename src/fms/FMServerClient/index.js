@@ -6,16 +6,16 @@
  */
 
 const rp = require('request-promise');
-const Promise = require('bluebird');
-const xml2js = require("xml2js");
+const Promise = require('bluebird');// jshint ignore:line
+const xml2js = require('xml2js');
 
-const formatter = require('./formatter');
+
 const formatterNew = require('./formaterWithValues');
 const FileMakerServerError = require('./FileMakerServerError');
 const errors = require('feathers-errors');
-const qs = require('querystring')
+const qs = require('querystring');
 
-const XML_END_POINT_OLD = '/fmi/xml/fmresultset.xml';
+//const XML_END_POINT_OLD = '/fmi/xml/fmresultset.xml';
 const XML_END_POINT = '/fmi/xml/FMPXMLRESULT.xml';
 
 Promise.promisifyAll( xml2js );
@@ -28,7 +28,7 @@ let server = 'localhost';
 
 
 const format = (json) =>{
-  return formatter(json.fmresultset)
+  return formatter(json.fmresultset);
 };
 
 const handleHTTPResponse = (httpResponse)=>{
@@ -36,7 +36,7 @@ const handleHTTPResponse = (httpResponse)=>{
   if(httpResponse.statusCode === 401){
     throw new errors.NotAuthenticated('Invalid User name and or password')
   }else{
-    return httpResponse.body
+    return httpResponse.body;
   }
 }
 
@@ -44,7 +44,7 @@ const handleHTTPResponse = (httpResponse)=>{
 const convertToJSON = (xml)=>{
 
   if (xml === '') throw new Error('FileMaker Server Web Publishing Engine may need to be restarted');
-  return formatterNew(xml)
+  return formatterNew(xml);
 };
 
 const handleFileMakerErrors = (jsonResponse)=>{
@@ -56,10 +56,10 @@ const handleFileMakerErrors = (jsonResponse)=>{
       //pass this back so the service can report error correctly
       return {
         error : '401'
-      }
+      };
     }
   }
-  return jsonResponse
+  return jsonResponse;
 };
 
 /**
@@ -69,12 +69,12 @@ const handleFileMakerErrors = (jsonResponse)=>{
  */
 module.exports.request = (options) =>{
 
-  const fmquerystring = qs.stringify(options.qs)
+  const fmquerystring = qs.stringify(options.qs);
 
   options.uri = 'https://' + server + XML_END_POINT;
   options.strictSSL=false;
-  options.resolveWithFullResponse = true
-  options.simple = false
+  options.resolveWithFullResponse = true;
+  options.simple = false;
 
   /**
    * bad request error handler
@@ -89,20 +89,20 @@ module.exports.request = (options) =>{
         return {
           method : options.method,
           url : options.uri + "?" + qs.stringify(options.qs)
-        }
+        };
       }else {
         return {
           method : options.method,
           url : options.uri,
           postData : options.form
-        }
+        };
       }
 
     };
     if(jsonResponse.name==='FileMakerServerError'){
       throw new errors.BadRequest('FileMaker Server Error',getErrorData());
     }
-    return jsonResponse
+    return jsonResponse;
   };
 
 
@@ -112,7 +112,7 @@ module.exports.request = (options) =>{
     .then(convertToJSON)
     // .then(format) // not using now
     .then(handleFileMakerErrors)
-    .then(handleBadFileMakerServerRequest)
+    .then(handleBadFileMakerServerRequest);
 
 
 

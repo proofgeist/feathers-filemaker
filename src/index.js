@@ -10,8 +10,6 @@ const transformers = require('./fms/FMServerClient/transformersNew')
 const Joi = require('joi');
 
 
-fms.setURL('quest.geistinteractive.net');
-
 const _ = {
   values(obj) {
     return Object.keys(obj).map(key => obj[key]);
@@ -66,6 +64,8 @@ class Service {
     this.paginate = options.paginate || {};
     this.connection = value.connection
     this.model = value.model
+
+    fms.setURL(this.connection.host);
   }
 
   extend(obj) {

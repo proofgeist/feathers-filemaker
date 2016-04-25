@@ -5,12 +5,9 @@
 
 
 
-const Promise = require('bluebird');
-const xml2js = require("xml2js");
+const Promise = require('bluebird');  // jshint ignore:line
+const xml2js = require('xml2js');
 var FileMakerServerError = require('./FileMakerServerError');
-
-
-
 
 
 
@@ -22,84 +19,80 @@ module.exports = (xml)=>{
       return fields.FIELD.map((item)=>{
 
         const fieldName = item.$.NAME;
-        const splitName = fieldName.split('::')
-        const table = splitName.length===2 ? splitName[0] : ''
+        const splitName = fieldName.split('::');
+        const table = splitName.length===2 ? splitName[0] : '';
 
         const typer = {
           name : fieldName,
           type : item.$.TYPE,
           table : table
-        }
-        return typer
+        };
+        return typer;
+      });
 
-      })
-
-    })[0]
-  }
+    })[0];
+  };
 
 
-  let error
+  let error;
   return xml2js.parseStringAsync(xml)
     .then((json)=>{
 
+
       error = json.FMPXMLRESULT.ERRORCODE[0];
-      if(error != 0){
-        return new FileMakerServerError(error)
+      if(error !== '0'){
+        return new FileMakerServerError(error);
       }
+      
+      let fieldsArray =  fieldArray(json);
+      let dataNode =  json.FMPXMLRESULT.RESULTSET[0];
 
+      let totalFound = parseInt(dataNode.$.FOUND);
 
-      let fieldsArray =  fieldArray(json)
-
-
-      let dataNode =  json.FMPXMLRESULT.RESULTSET[0]
-
-      let totalFound = parseInt(dataNode.$.FOUND)
-
-      let rows = dataNode.ROW
+      let rows = dataNode.ROW;
       if(!rows){
-        return []
+        return [];
       }
-
-
+      
       let data = rows.map((row)=>{
         const record = {
           modid: parseInt(row.$.MODID),
-          recid: parseInt(row.$.RECORDID),
-        }
+          recid: parseInt(row.$.RECORDID)
+        };
 
 
         fieldsArray.map((fieldDef, i)=>{
 
           if(fieldDef.table===''){
-            let value = record[fieldDef.name] = row.COL[i].DATA[0]
+            let value = record[fieldDef.name] = row.COL[i].DATA[0];
 
             if(fieldDef.type==='NUMBER'){
               if(value){
-                value = parseFloat(value)
+                value = parseFloat(value);
               }else{
-                value=null
+                value=null;
               }
 
             }
 
-            record[fieldDef.name] = value
+            record[fieldDef.name] = value;
           }else{
             // relatedRecords
           }
         });
 
 
-        return record
-      })
+        return record;
+      });
 
 
       return  {
         total:totalFound,
         error: error,
         data
-      }
+      };
 
 
-    })
+    });
 };
 

@@ -27,7 +27,7 @@ app.use('/people', fms({
 
 const people = app.service('people');
 
-const _ids = {}
+const _ids = {};
 
 describe('fms', () => {
   beforeEach(done => {
@@ -50,7 +50,7 @@ describe('fms', () => {
 
 
 
-  //base(people, _ids, errors);
+  base(people, _ids, errors);
 
 
 });
