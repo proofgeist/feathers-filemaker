@@ -35,7 +35,7 @@ const optionsSchema = Joi.object().keys({
     host : Joi.string().required(),
     db : Joi.string().required(),
     user : Joi.string().required(),
-    pass : Joi.string().required()
+    pass : Joi.string()
   })
 });
 
