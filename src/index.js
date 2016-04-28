@@ -273,7 +273,13 @@ class Service {
 
   }
 
-  get(id) {
+  /**
+   * private get to use internally
+   * @param id
+   * @returns {Promise.<TResult>}
+   * @private
+   */
+  _get(id) {
 
     const qs = this.fmsQuery('-find');
     qs[this.model.idField]=id;
@@ -292,6 +298,14 @@ class Service {
       }
       return data[0];
     });
+  }
+
+  /**
+   * public get
+   * @param id
+   */
+  get(id){
+    return this._get(id);
   }
 
 

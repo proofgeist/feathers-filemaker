@@ -49,7 +49,9 @@ const handleFileMakerErrors = (jsonResponse)=>{
     }else if(jsonResponse.error==='401'){
       //pass this back so the service can report error correctly
       return {
-        error : '401'
+        total:0,
+        error: '401',
+        data :[]
       };
     }
   }

@@ -15,7 +15,7 @@ const connection = {
 };
 
 const model  = {
-  layout : 'people'
+  layout : 'People'
 };
 
 
@@ -25,6 +25,7 @@ app.use('/people', fms({
 }));
 
 
+app.setup();
 const people = app.service('people');
 
 const _ids = {};
@@ -49,15 +50,27 @@ describe('fms', () => {
   });
 
 
-
   base(people, _ids, errors);
 
 
 });
 
-describe('FMS service example test', () => {
+describe('FMS service example test', function () {
   after(done => server.close(() => done()));
 
   example();
 });
+
+describe('Issues', function () {
+  describe('#5', function () {
+    it('should not error when no records found' , function(  ) {
+      return people.find({query: {name : 'no one named this'}}).then((result)=>{
+        assert.ok(result.length===0);
+        return result;
+      });
+    });
+
+  });
+});
+
 
