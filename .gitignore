@@ -33,3 +33,4 @@ lib/
 
 scratch.js
 transformer.js
+.env
