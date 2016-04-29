@@ -1,4 +1,5 @@
 /*jshint expr: true*/
+require('dotenv').config({silent:true});
 import { base, example } from 'feathers-service-tests';
 import errors from 'feathers-errors';
 import feathers from 'feathers';
@@ -8,10 +9,10 @@ var fms = require('../lib');
 
 
 const connection = {
-  host : 'localhost',
+  host : process.env.FILEMAKER_SERVER_ADDRESS,
   db : 'Test',
-  user: 'admin',
-  pass: 'admin'
+  user: process.env.FILEMAKER_USER,
+  pass: process.env.FILEMAKER_PASS
 };
 
 const model  = {

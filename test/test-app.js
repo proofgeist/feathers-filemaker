@@ -17,10 +17,10 @@ const app = feathers()
 
 
 const connection = {
-  host : 'localhost',
+  host : process.env.FILEMAKER_SERVER_ADDRESS,
   db : 'Test',
-  user: 'admin',
-  pass: 'admin'
+  user: process.env.FILEMAKER_USER,
+  pass: process.env.FILEMAKER_PASS
 };
 
 const model  = {
