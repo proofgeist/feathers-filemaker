@@ -1,3 +1,4 @@
+require('dotenv').config({silent:true});
 var feathers = require('feathers');
 var bodyParser = require('body-parser');
 var rest = require('feathers-rest');

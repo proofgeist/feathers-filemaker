@@ -43,48 +43,43 @@ module.exports = (xml)=>{
       if(error !== '0'){
         return new FileMakerServerError(error);
       }
-      
+
       let fieldsArray =  fieldArray(json);
       let dataNode =  json.FMPXMLRESULT.RESULTSET[0];
 
       let totalFound = parseInt(dataNode.$.FOUND);
 
       let rows = dataNode.ROW;
-      if(!rows){
-        return [];
-      }
-      
-      let data = rows.map((row)=>{
-        const record = {
-          modid: parseInt(row.$.MODID),
-          recid: parseInt(row.$.RECORDID)
-        };
 
+      let data = [];
+      if(totalFound > 0 && rows ){
+        data = rows.map((row)=>{
+          const record = {
+            modid: parseInt(row.$.MODID),
+            recid: parseInt(row.$.RECORDID)
+          };
 
-        fieldsArray.map((fieldDef, i)=>{
+          fieldsArray.map((fieldDef, i)=>{
 
-          if(fieldDef.table===''){
-            let value = record[fieldDef.name] = row.COL[i].DATA[0];
+            if(fieldDef.table===''){
+              let value = record[fieldDef.name] = row.COL[i].DATA[0];
 
-            if(fieldDef.type==='NUMBER'){
-              if(value){
-                value = parseFloat(value);
-              }else{
-                value=null;
+              if(fieldDef.type==='NUMBER'){
+                if(value){
+                  value = parseFloat(value);
+                }else{
+                  value=null;
+                }
               }
-
+              record[fieldDef.name] = value;
+            }else{
+              // relatedRecords
             }
-
-            record[fieldDef.name] = value;
-          }else{
-            // relatedRecords
-          }
+          });
+          return record;
         });
 
-
-        return record;
-      });
-
+      }
 
       return  {
         total:totalFound,
