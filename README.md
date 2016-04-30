@@ -26,6 +26,7 @@ This adapter works like others Feathers Adapters. Please refer to the [Feathers 
 
 This adapter takes two additional keys in it's configuration object: `connection`   and `model`
 
+
 #### Connection
 
 ```js
@@ -46,6 +47,32 @@ This adapter takes two additional keys in it's configuration object: `connection
  ```
 
 Connection specifies the host, database, user, and password to connect to the database. model specifies the layout and idField to use for the feathers service.  See the complete example below for more information.
+
+
+#### Script Service
+There is also an included ScriptService that will run scripts on a specified layout. That layout must be based on a dedicated TO and Table.  The service creates a record in that table and dumps the data in a field before running the script. See the "Utility" Table and layout in the Test file. Add that table to your solution.  The records it creates are great for logging purposes.  But can be destroyed at will. 
+
+The Service will return JSON as it from the last layout it is on.  However if you end the script on 'Utility' layout, then it is smart enough to pull the result from the 'results' field. This lets you create custom responses with worrying about having a table to produce them from.  However the "result" will be parsed as JSON so you need to make sure it valid JSON.
+
+This great for running transactions scripts!
+
+#### Using the Script Service
+
+```javascript
+var fms = require('feathers-filemaker');
+var script = fms.ScriptService;
+
+// we configure a ScriptService, we need a connection, and a layout.
+app.configure(script({connection, layout: 'Utility'}));
+
+//...
+
+// now later, anywhere we have access to the 'app' we can get the service.
+const ScriptService = app.service('fms-script-service');
+
+// and use it like this.
+ScriptService.run('ScriptName' , {any:'data', I: 'want'} ).then(handleResults)
+```
 
 
 ## Complete Example
