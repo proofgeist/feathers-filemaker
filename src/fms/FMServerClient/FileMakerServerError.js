@@ -9,22 +9,17 @@ module.exports = exports = FileMakerServerError;
  * @param msg
  * @constructor
  */
-function FileMakerServerError(code, url) {
-    this.url = url;
+function FileMakerServerError(code) {
     this.error = code;
     this.message = getMessge(code);
     this.name = 'FileMakerServerError';
    // const err = Error(this.message); // http://es5.github.io/#x15.11.1
    // this.stack = err.stack;
-    this.isTransient = isTransient(code);
 }
 
 FileMakerServerError.prototype = Object.create(Error.prototype);
 FileMakerServerError.prototype.constructor = FileMakerServerError;
 
-function isTransient(error){
-    return  (error === '401' || error === '8003' || error === '301');
-}
 
 function getMessge(errorCode){
     var returnString = '';
