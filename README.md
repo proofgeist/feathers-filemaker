@@ -7,7 +7,7 @@
 ## About
 This is a FileMaker Adapter for feathers.js. It makes it trivial to create a feathers service for any FileMaker Layout.  For non FileMaker people, a layout is a Table with a defined set of fields, and related records.
 
-This currently passes all but two tests in the feathers-service-test suite. There is not an easy way to do a a true POST, which would require nulling fields. When you POST, you basically just get a Patch. We also do not support the $in and $nin query filters.  We may in the future.  Support for $or is limited. Only single fields will work.
+This currently passes all but two tests in the feathers-service-test suite. There is not an easy way to do a a true PUT, which would require nulling fields. When you PUT or in feathers terms 'update', you basically just get a PATCH. We also do not support the $in and $nin query filters.  We may in the future.  Support for $or is limited. Only single fields will work.
 
 ## Install
 
@@ -52,9 +52,9 @@ Connection specifies the host, database, user, and password to connect to the da
 #### Script Service
 There is also an included ScriptService that will run scripts on a specified layout. That layout must be based on a dedicated TO and Table.  The service creates a record in that table and dumps the data in a field before running the script. See the "Utility" Table and layout in the Test file. Add that table to your solution.  The records it creates are great for logging purposes.  But can be destroyed at will. 
 
-The Service will return JSON as it from the last layout it is on.  However if you end the script on 'Utility' layout, then it is smart enough to pull the result from the 'results' field. This lets you create custom responses with worrying about having a table to produce them from.  However the "result" will be parsed as JSON so you need to make sure it valid JSON.
+The Service will return JSON as it normally does from the last layout it is on.  However if you end the script on 'Utility' layout, then it is smart enough to pull the result from the 'results' field. This lets you create custom responses with worrying about having a table to produce them from.  However the "result" will be parsed as JSON so you need to make sure it is valid JSON.
 
-This great for running transactions scripts!
+This is great for running transactions scripts!
 
 #### Using the Script Service
 
