@@ -414,8 +414,12 @@ class Service {
   }
 
   remove(id, params){
-    if(id === null) {
+    if(id.query){
+      throw new errors.BadRequest('First parameter of remove() contained a \'query\' object. Did you mean to pass null?')
+    }
 
+
+    if(id === null) {
       return this._find(params)
         .then(page =>{
           return Promise.all(page.data.map(current => this._remove(current[this.model.idField])));

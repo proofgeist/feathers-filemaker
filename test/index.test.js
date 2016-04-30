@@ -29,6 +29,12 @@ app.use('/people', fms({
   model, connection
 }));
 
+app.use('/empty', fms({
+  model :{ layout : 'Empty'},
+  connection
+}));
+const EmptyTableService = app.service('empty');
+
 // we configure a ScriptService and then retrieve it from the app
 app.configure(script({connection, layout: 'Utility'}));
 const ScriptService = app.service('fms-script-service');
@@ -89,6 +95,15 @@ describe('Issues', function () {
         return result;
       });
     });
+
+    describe( '#6 forgetting to pass null as first parem of remove' , function() {
+      it.only('has a nice error', function () {
+        return people.remove({query:{age:500}}).catch(err=>{
+          assert.ok(err.toString().indexOf('BadRequest: First')===0);
+          return 1
+        })
+      })
+    })
 
   });
 });
