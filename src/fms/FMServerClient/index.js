@@ -94,7 +94,7 @@ module.exports.request = (options) =>{
 
     };
     if(jsonResponse.name==='FileMakerServerError'){
-      const message = 'FileMakerServerError: ' + jsonResponse.error + ', ' + jsonResponse.message
+      const message = 'FileMakerServerError: ' + jsonResponse.error + ', ' + jsonResponse.message;
       throw new errors.BadRequest( message ,getErrorData());
     }
     return jsonResponse;

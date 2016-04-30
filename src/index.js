@@ -68,27 +68,31 @@ class Service {
     };
   }
 
-  fmsAuth(){
+  fmsAuth(params){
+    if(!params){
+      params = {};
+    }
+    const auth = params.auth || {};
     return {
-      user : this.connection.user,
-      pass : this.connection.pass
+      user : auth.user || this.connection.user,
+      pass : auth.pass || this.connection.pass
     };
   }
 
-  buildGetOptions(qs){
+  buildGetOptions(qs, params){
     return {
       qs,
       method : 'get',
-      auth : this.fmsAuth()
+      auth : this.fmsAuth(params)
     };
   }
 
-  buildPostOptions(qs, data){
+  buildPostOptions(qs, data, params){
     Object.assign(qs, data);
     const obj = {
       form: qs,
       method: 'post',
-      auth : this.fmsAuth()
+      auth : this.fmsAuth(params)
     };
     return obj;
   }
@@ -161,8 +165,8 @@ class Service {
   }
 
 
-  buildFindOptions(qs, query, filters){
-
+  buildFindOptions(qs, params, filters){
+    const query = params.query;
     let expandedQ = this.expandQueryWithOperators(query);
     let obj = Object.assign({}, qs, expandedQ);
     obj=this.handleFilters(obj, filters);
@@ -170,11 +174,12 @@ class Service {
     return {
       qs : obj,
       method : 'get',
-      auth : this.fmsAuth()
+      auth : this.fmsAuth(params)
     };
   }
 
-  buildOrFindOptions(qs, query, filters){
+  buildOrFindOptions(qs, params, filters){
+    const query = params.query;
     const orArray = query.$or;
     delete query.$or;
 
@@ -196,7 +201,7 @@ class Service {
     return {
       qs : obj,
       method : 'get',
-      auth : this.fmsAuth()
+      auth : this.fmsAuth(params)
     };
   }
 
@@ -213,12 +218,12 @@ class Service {
 
     let options;
     if(query.$or){
-      options = this.buildOrFindOptions(this.fmsQuery('-findquery'), query, filters);
+      options = this.buildOrFindOptions(this.fmsQuery('-findquery'), params, filters);
     }else{
 
       let command = Object.keys(query).length === 0 ? '-findall' : '-find';
 
-      options = this.buildFindOptions(this.fmsQuery(command), params.query, filters);
+      options = this.buildFindOptions(this.fmsQuery(command), params, filters);
     }
 
     let totalFound;
@@ -279,14 +284,14 @@ class Service {
    * @returns {Promise.<TResult>}
    * @private
    */
-  _get(id) {
+  _get(id, params) {
 
     const qs = this.fmsQuery('-find');
     qs[this.model.idField]=id;
     qs[this.model.idField + '.op'] = 'eq';
 
 
-    const options = this.buildGetOptions( qs);
+    const options = this.buildGetOptions(qs, params);
 
     return fms.request(options).then((response)=>{
       const data = response.data;
@@ -304,37 +309,36 @@ class Service {
    * public get
    * @param id
    */
-  get(id){
-    return this._get(id);
+  get(id, params){
+    return this._get(id, params);
   }
 
 
-  _create(data) {
+  _create(data,params) {
     const qs = this.fmsQuery('-new');
-    const options = this.buildPostOptions(qs, data);
+    const options = this.buildPostOptions(qs, data, params);
     return fms.request(options).then((response)=>{
       const data = response.data;
       return data[0];
     });
   }
 
-  create(data) {
+  create(data,params) {
     if(Array.isArray(data)) {
-      return Promise.all(data.map(current => this._create(current)));
+      return Promise.all(data.map(current => this._create(current, params)));
     }
-
-    return this._create(data);
+    return this._create(data, params);
   }
 
   // Update without hooks and mixins that can be used internally
-  _update(id, data) {
+  _update(id, data, params) {
 
-    return this.get(id)
+    return this.get(id, params)
       // find the record to get its record id
       .then((record)=>{
         const qs = this.fmsQuery('-edit');
         qs['-recid']=record.recid;
-        return this.buildPostOptions(qs, data);
+        return this.buildPostOptions(qs, data, params);
       })
 
       //update it
@@ -347,24 +351,24 @@ class Service {
 
   }
 
-  update(id, data) {
+  update(id, data, params) {
     if(id === null || Array.isArray(data)) {
       return Promise.reject(new errors.BadRequest(
         `You can not replace multiple instances. Did you mean 'patch'?`
       ));
     }
 
-    return this._update(id, data);
+    return this._update(id, data, params);
   }
 
   // Patch without hooks and mixins that can be used internally
-  _patch(id, data) {
-    return this.get(id)
+  _patch(id, data, params) {
+    return this.get(id, params)
     // find the record to get its record id
       .then((record)=>{
         const qs = this.fmsQuery('-edit');
         qs['-recid']=record.recid;
-        return this.buildPostOptions(qs, data);
+        return this.buildPostOptions(qs, data,params);
       })
 
       //update it
@@ -387,16 +391,16 @@ class Service {
     return this._patch(id, data, params);
   }
 
-  _remove(id){
+  _remove(id, params){
 
     let deletedRecord;
 
-    return this.get(id)
+    return this.get(id,params)
       .then((record)=>{
         deletedRecord = record;
         const qs = this.fmsQuery('-delete');
         qs['-recid']=record.recid;
-        return this.buildGetOptions(qs);
+        return this.buildGetOptions(qs,params);
 
       })
       .then((options)=>{
@@ -414,20 +418,20 @@ class Service {
   }
 
   remove(id, params){
-    if(id.query){
-      throw new errors.BadRequest('First parameter of remove() contained a \'query\' object. Did you mean to pass null?')
-    }
 
+    if(id && id.query){
+      throw new errors.BadRequest('First parameter of remove() contained a \'query\' object. Did you mean to pass null?');
+    }
 
     if(id === null) {
       return this._find(params)
         .then(page =>{
-          return Promise.all(page.data.map(current => this._remove(current[this.model.idField])));
+
+          return Promise.all(page.data.map(current => this._remove(current[this.model.idField], params )));
         });
     }
 
-
-    return this._remove(id);
+    return this._remove(id, params);
   }
 
   setup(app){

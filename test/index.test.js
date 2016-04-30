@@ -29,11 +29,6 @@ app.use('/people', fms({
   model, connection
 }));
 
-app.use('/empty', fms({
-  model :{ layout : 'Empty'},
-  connection
-}));
-const EmptyTableService = app.service('empty');
 
 // we configure a ScriptService and then retrieve it from the app
 app.configure(script({connection, layout: 'Utility'}));
@@ -87,6 +82,43 @@ describe('ScriptService',function () {
   });
 });
 
+describe('if auth exist on params use it', function () {
+
+  const auth = {user: 'second', pass: 'second'};
+
+  const checkFor401 = (error)=>{
+    assert.ok(error.code!==401);
+  };
+
+  // these may error, but as long as the error is not 401
+  // we should be ok
+
+  it('use it with find', function () {
+    return people.find({auth}).catch(checkFor401);
+  });
+
+  it('use it with get', function () {
+    return people.get(1, {auth}).catch(checkFor401);
+  });
+
+  it('use it with create', function () {
+    return people.create({name:'joe'}, {auth}).catch(checkFor401);
+  });
+
+  it('use it with patch', function () {
+    return people.patch(5736,{name:'s'}, {auth}).catch(checkFor401);
+  });
+
+  it('use it with update', function () {
+    return people.update(5736, {}, {auth}).catch(checkFor401);
+  });
+
+  it('use it with remove', function () {
+    return people.remove(1, {auth}).catch(checkFor401);
+  });
+
+});
+
 describe('Issues', function () {
   describe('#5', function () {
     it('should not error when no records found' , function(  ) {
@@ -97,13 +129,13 @@ describe('Issues', function () {
     });
 
     describe( '#6 forgetting to pass null as first parem of remove' , function() {
-      it.only('has a nice error', function () {
+      it('has a nice error', function () {
         return people.remove({query:{age:500}}).catch(err=>{
           assert.ok(err.toString().indexOf('BadRequest: First')===0);
-          return 1
-        })
-      })
-    })
+          return 1;
+        });
+      });
+    });
 
   });
 });
