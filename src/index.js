@@ -436,3 +436,4 @@ export default function init(options) {
 }
 
 init.Service = Service;
+init.ScriptService = require('./script');
