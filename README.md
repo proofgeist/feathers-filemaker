@@ -68,7 +68,8 @@ app.configure(script({connection, layout: 'Utility'}));
 //...
 
 // now later, anywhere we have access to the 'app' we can get the service.
-const ScriptService = app.service('fms-script-service');
+// assuming connection to have a db named 'Test' and our layout was 'Utility'
+const ScriptService = app.service('fms-Test-Utility-script');
 
 // and use it like this.
 ScriptService.run('ScriptName' , {any:'data', I: 'want'} ).then(handleResults)

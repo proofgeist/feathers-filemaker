@@ -32,7 +32,7 @@ app.use('/people', fms({
 
 // we configure a ScriptService and then retrieve it from the app
 app.configure(script({connection, layout: 'Utility'}));
-const ScriptService = app.service('fms-script-service');
+const ScriptService = app.service('fms-Test-Utility-script');
 
 
 const people = app.service('people');

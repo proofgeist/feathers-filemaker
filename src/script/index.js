@@ -51,30 +51,36 @@ export default function(options){
 
   return function(){
     const app = this;
-    
+
     const model = {
       layout : options.layout,
       idField : 'id'
     };
-    
+
+
+    const baseServicePath = 'fms-' + options.connection.db + '-' + options.layout;
+
+    const utilityPath = baseServicePath + '-script-utility';
+
+
     // we need this service to create records on.
     const RestUtility = fmsService({model, connection: options.connection});
-    app.use('fms-internal-utility', RestUtility);
+    app.use( utilityPath, RestUtility);
 
-    const RestUtilityService = app.service('fms-internal-utility');
+    const RestUtilityService = app.service(utilityPath);
     // hooks will disable all but internal access
     RestUtilityService.before(hooks.before);
 
 
+    const scriptServicePath = baseServicePath + '-script';
 
     // THEN create and expose a custom Service that has one method, 'run'
-    app.use('fms-script-service', new Service({transactor : RestUtilityService}) );
+    app.use(scriptServicePath, new Service({transactor : RestUtilityService}) );
 
 
-    const ScriptService = app.service('fms-script-service');
+    const ScriptService = app.service(scriptServicePath);
     // hooks will disable all but internal access
     ScriptService.before(hooks.before);
-
 
   };
 }
