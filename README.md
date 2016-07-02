@@ -80,6 +80,7 @@ ScriptService.run('ScriptName' , {any:'data', I: 'want'} ).then(handleResults)
 
 ```javascript
 var feathers = require('feathers');
+var fms = require('feathers-filemaker');
 var bodyParser = require('body-parser');
 var rest = require('feathers-rest');
 var socketio = require('feathers-socketio');
@@ -122,6 +123,68 @@ var port = 3030;
 app.listen(port, function() {
   console.log(`Feathers server listening on port ${port}`);
 });
+```
+### Simple REST Service
+
+In addition to describing setting up services using normal feathers idioms as described above, you can simply expose a RESTFUL endpoint to all the databases on a the server. This is super simple to setup. It covers many of the common scenarios that REST is used for, however it is less flexible than feathers services.
+
+This service generates a restful endpoint in the following form
+
+`http://<address>:<port>/<prefix>/db/layout`
+`http://<address>:<port>/<prefix>/db/layout/id`
+
+The prefix can be passed in as part of configuration. ( see below )
+
+### Authentication
+
+Basic auth is the only option available to the Simple REST Service. JSONWeb Tokens currently won't work.
+
+### Limitations
+
+No web sockets, and therefor no Realtime features.
+You can't use feathers hooks.
+
+### How it works
+
+You start by creating a normal feathers server. Then setup the Simple REST Server using configure()
+
+Note: it takes the same options as a normal Feathers-FileMaker Service, plus one more "prefix" which is where the REST API is mounted ( See above )
+
+Connection and model are the same with a regular Service, but some of the properties aren't used or are used only as defaults
+
+Connection.db is ignored
+Connection.user is a default, and is overridden by basic auth
+Connection.password is a default, and is overridden by basic auth
+
+Model.layout is ignored.
+
+Example:
+
+```javascript
+//require feathers-filemaker
+var fms = require('feathers-filemaker');
+
+// get the Service from the adaptor
+var SimpleRESTService = fms.SimpleRESTService;
+
+// Create a feathers app as normal
+// there other things you can add here but this is the bare minimum.
+const app = feathers()
+  .configure(hooks())
+  .configure(rest())
+  .use(bodyParser.json())
+  .use(bodyParser.urlencoded({ extended: true }))
+  
+  // configure the Simple REST Service
+  .configure( SimpleRESTService({
+      connection,
+      model,
+      prefix : 'rest'  // url will be http://<address>:<port>/rest/db/layout
+    }))
+    
+    //make sure you have the error handler
+  .use(errorHandler())
+
 ```
 
 ## License
