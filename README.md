@@ -182,9 +182,9 @@ const SimpleRestService = fm.SimpleRESTService;
 // you'll need a connection
 const connection = {
   host : 'localhost',
-  db : 'Test',  // default it doesn't matter
-  user : 'wrong',   // default, overwritten by basic auth
-  pass : 'wrong'    // default, overwritten by basic auth
+  db : 'Test',  // ignored
+  user : 'wrong',   // optional, overwritten by basic auth
+  pass : 'wrong'    // optional, overwritten by basic auth
 };
 
 const app = feathers();
