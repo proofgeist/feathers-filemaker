@@ -157,32 +157,64 @@ Connection and model are the same with a regular Service, but some of the proper
 * Connection.password is a default, and is overridden by basic auth
 * Model.layout is ignored.
 
-Partial Example:
+Example:
 
 ```javascript
-//require feathers-filemaker
-var fms = require('feathers-filemaker');
+// app.js of generated feathers app
+const path = require('path');
+const serveStatic = require('feathers').static;
+const favicon = require('serve-favicon');
+const compress = require('compression');
+const cors = require('cors');
+const feathers = require('feathers');
+const configuration = require('feathers-configuration');
+const hooks = require('feathers-hooks');
+const rest = require('feathers-rest');
+const bodyParser = require('body-parser');
+const socketio = require('feathers-socketio');
+const middleware = require('./middleware');
+const services = require('./services');
 
-// get the Service from the adaptor
-var SimpleRESTService = fms.SimpleRESTService;
+//get SimpleRestService from feathers-filemaker
+const fm = require('feathers-filemaker');
+const SimpleRestService = fm.SimpleRESTService;
 
-// Create a feathers app as normal
-// there other things you can add here but this is the bare minimum.
-const app = feathers()
-  .configure(hooks())
-  .configure(rest())
+// you'll need a connection
+const connection = {
+  host : 'localhost',
+  db : 'Test',  // default it doesn't matter
+  user : 'wrong',   // default, overwritten by basic auth
+  pass : 'wrong'    // default, overwritten by basic auth
+};
+
+const app = feathers();
+
+app.configure(configuration(path.join(__dirname, '..')));
+
+app.use(compress())
+  .options('*', cors())
+  .use(cors())
+  .use(favicon( path.join(app.get('public'), 'favicon.ico') ))
+  .use('/', serveStatic( app.get('public') ))
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({ extended: true }))
+  .configure(hooks())
+  .configure(rest())
+  .configure(socketio())
+  .configure(services)
   
-  // configure the Simple REST Service
-  .configure( SimpleRESTService({
-      connection,
-      model,
-      prefix : 'rest'  // url will be http://<address>:<port>/rest/db/layout
-    }))
-    
-    //make sure you have the error handler
-  .use(errorHandler())
+  //configure SimpleRestService here
+  .configure(SimpleRestService({
+    connection,
+    prefix : 'rest'
+
+  }))
+  
+  // middleware should be last
+  .configure(middleware);
+
+
+module.exports = app;
 
 ```
 
