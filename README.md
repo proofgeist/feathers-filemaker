@@ -126,9 +126,9 @@ app.listen(port, function() {
 ```
 ### Simple REST Service
 
-In addition to describing setting up services using normal feathers idioms as described above, you can simply expose a RESTFUL endpoint to all the databases on a the server. This is super simple to setup. It covers many of the common scenarios that REST is used for, however it is less flexible than feathers services.
+In addition to setting up services using normal feathers idioms as described above, you can simply expose a RESTFUL endpoint to all the databases on the server. This is super simple to setup. It covers many of the common scenarios that REST is used for, however it is less powerful than normal feathers services.
 
-This service generates a restful endpoint in the following form
+The Simple REST Service generates a restful endpoint in the following form:
 
 `http://<address>:<port>/<prefix>/db/layout`
 `http://<address>:<port>/<prefix>/db/layout/id`
@@ -152,13 +152,12 @@ Note: it takes the same options as a normal Feathers-FileMaker Service, plus one
 
 Connection and model are the same with a regular Service, but some of the properties aren't used or are used only as defaults
 
-Connection.db is ignored
-Connection.user is a default, and is overridden by basic auth
-Connection.password is a default, and is overridden by basic auth
+* Connection.db is ignored
+* Connection.user is a default, and is overridden by basic auth
+* Connection.password is a default, and is overridden by basic auth
+* Model.layout is ignored.
 
-Model.layout is ignored.
-
-Example:
+Partial Example:
 
 ```javascript
 //require feathers-filemaker
