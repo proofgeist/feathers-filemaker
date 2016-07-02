@@ -60,10 +60,14 @@ class Service {
     return Proto.extend(obj, this);
   }
 
-  fmsQuery(command){
+  fmsQuery(command, params){
+
+    const db = params._db ? params._db :this.connection.db;
+    const layout = params._lay ? params._lay : this.model.layout;
+
     return {
-      '-db' : this.connection.db,
-      '-lay' : this.model.layout,
+      '-db' : db,
+      '-lay' : layout,
       [command] : ''
     };
   }
@@ -218,12 +222,12 @@ class Service {
 
     let options;
     if(query.$or){
-      options = this.buildOrFindOptions(this.fmsQuery('-findquery'), params, filters);
+      options = this.buildOrFindOptions(this.fmsQuery('-findquery', params), params, filters);
     }else{
 
       let command = Object.keys(query).length === 0 ? '-findall' : '-find';
 
-      options = this.buildFindOptions(this.fmsQuery(command), params, filters);
+      options = this.buildFindOptions(this.fmsQuery(command, params), params, filters);
     }
 
     let totalFound;
@@ -286,7 +290,7 @@ class Service {
    */
   _get(id, params) {
 
-    const qs = this.fmsQuery('-find');
+    const qs = this.fmsQuery('-find', params);
     qs[this.model.idField]=id;
     qs[this.model.idField + '.op'] = 'eq';
 
@@ -315,7 +319,7 @@ class Service {
 
 
   _create(data,params) {
-    const qs = this.fmsQuery('-new');
+    const qs = this.fmsQuery('-new', params);
     const options = this.buildPostOptions(qs, data, params);
     return fms.request(options).then((response)=>{
       const data = response.data;
@@ -336,7 +340,7 @@ class Service {
     return this.get(id, params)
       // find the record to get its record id
       .then((record)=>{
-        const qs = this.fmsQuery('-edit');
+        const qs = this.fmsQuery('-edit', params);
         qs['-recid']=record.recid;
         return this.buildPostOptions(qs, data, params);
       })
@@ -366,7 +370,7 @@ class Service {
     return this.get(id, params)
     // find the record to get its record id
       .then((record)=>{
-        const qs = this.fmsQuery('-edit');
+        const qs = this.fmsQuery('-edit', params);
         qs['-recid']=record.recid;
         return this.buildPostOptions(qs, data,params);
       })
@@ -398,7 +402,7 @@ class Service {
     return this.get(id,params)
       .then((record)=>{
         deletedRecord = record;
-        const qs = this.fmsQuery('-delete');
+        const qs = this.fmsQuery('-delete', params);
         qs['-recid']=record.recid;
         return this.buildGetOptions(qs,params);
 
@@ -445,3 +449,4 @@ export default function init(options) {
 
 init.Service = Service;
 init.ScriptService = require('./script');
+init.FMRest = require('./rest');

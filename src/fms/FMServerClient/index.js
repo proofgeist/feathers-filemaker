@@ -24,7 +24,6 @@ let server = 'localhost';
 
 
 const handleHTTPResponse = (httpResponse)=>{
-
   if(httpResponse.statusCode === 401){
     throw new errors.NotAuthenticated('Invalid User name and or password');
   }else{
@@ -69,6 +68,7 @@ module.exports.request = (options) =>{
   options.strictSSL=false;
   options.resolveWithFullResponse = true;
   options.simple = false;
+ // console.log(options);
 
   /**
    * bad request error handler

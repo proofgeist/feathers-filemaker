@@ -6,6 +6,8 @@ import feathers from 'feathers';
 import assert from 'assert';
 import server from './test-app';
 import hooks from 'feathers-hooks';
+
+let restTest = require('./test-rest').test;
 var fms = require('../lib');
 var script = fms.ScriptService;
 
@@ -39,7 +41,6 @@ const people = app.service('people');
 
 app.setup();
 
-
 const _ids = {};
 
 describe('fms', () => {
@@ -67,10 +68,17 @@ describe('fms', () => {
 
 });
 
-describe('FMS service example test', function () {
+describe('Live Server Tests', function () {
   after(done => server.close(() => done()));
 
-  example();
+  describe( "Adapter Example", function () {
+    example();
+  })
+
+  describe( "REST Example", function () {
+    restTest();
+  })
+
 });
 
 describe('ScriptService',function () {
