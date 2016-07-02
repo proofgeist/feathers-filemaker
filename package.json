@@ -44,6 +44,7 @@
     "lib": "lib"
   },
   "dependencies": {
+    "basic-auth": "^1.0.4",
     "debug": "^2.2.0",
     "feathers": "^2.0.1",
     "feathers-commons": "^0.7.1",
