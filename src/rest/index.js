@@ -17,6 +17,10 @@ export default function(options){
   // if a model is not provided then add a default
   options.model = options.model || {layout: 'none'}
 
+  options.connection.db = options.connection.db || 'NA';
+  options.connection.user = options.connection.user || 'NA';
+  options.connection.pass = options.connection.pass || 'passNA';
+
   return function(){
 
     const app = this;
