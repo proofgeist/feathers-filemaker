@@ -4,7 +4,7 @@ var bodyParser = require('body-parser');
 var rest = require('feathers-rest');
 var socketio = require('feathers-socketio');
 var fms = require('../lib');
-var FMRest = fms.FMRest;
+var SimpleRESTService = fms.SimpleRESTService;
 const hooks = require('feathers-hooks');
 
 const errorHandler = require('feathers-errors/handler');
@@ -23,7 +23,8 @@ const model  = {
 };
 
 // Create a feathers instance.
-const app = feathers().configure(hooks())
+const app = feathers()
+  .configure(hooks())
 // Enable REST services
   .configure(rest())
   // Enable REST services
@@ -32,13 +33,11 @@ const app = feathers().configure(hooks())
   .use(bodyParser.json())
   // Turn on URL-encoded parser for REST services
   .use(bodyParser.urlencoded({ extended: true }))
-  .configure(FMRest({
-    connection,
-    prefix : 'restapi'
-  }))
+  .configure( SimpleRESTService({
+      connection,
+      prefix : 'restapi'
+    }))
   .use(errorHandler());
-
-
 
 
 
