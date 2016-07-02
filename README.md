@@ -130,8 +130,8 @@ In addition to setting up services using normal feathers idioms as described abo
 
 The Simple REST Service generates a restful endpoint in the following form:
 
-`http://<address>:<port>/<prefix>/db/layout`
-`http://<address>:<port>/<prefix>/db/layout/id`
+* `http://<address>:<port>/<prefix>/db/layout`
+* `http://<address>:<port>/<prefix>/db/layout/id`
 
 The prefix can be passed in as part of configuration. ( see below )
 
