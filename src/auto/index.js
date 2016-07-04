@@ -12,7 +12,7 @@ const basicAuth     = require('../middleware/basicAuth')
 export default function(options){
 
   // if no prefix is provided add a default
-  const prefix = options.prefix || 'rest';
+  const prefix = options.prefix || 'auto';
 
   // if a model is not provided then add a default
   options.model = options.model || {layout: 'none'}

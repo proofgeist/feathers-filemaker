@@ -449,4 +449,4 @@ export default function init(options) {
 
 init.Service = Service;
 init.ScriptService = require('./script');
-init.SimpleRESTService = require('./rest');
+init.AutoService = require('./auto');

@@ -9,7 +9,7 @@ import assert from 'assert';
 
 // Base Req for all tests
 const rp = require('request-promise').defaults({
-  baseUrl : 'http://' +process.env.FILEMAKER_SERVER_ADDRESS + ':3030/restapi',
+  baseUrl : 'http://' +process.env.FILEMAKER_SERVER_ADDRESS + ':3030/auto',
   auth: {
     user: 'admin',
     pass: 'admin'

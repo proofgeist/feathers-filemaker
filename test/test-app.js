@@ -4,7 +4,7 @@ var bodyParser = require('body-parser');
 var rest = require('feathers-rest');
 var socketio = require('feathers-socketio');
 var fms = require('../lib');
-var SimpleRESTService = fms.SimpleRESTService;
+var AutoService = fms.AutoService;
 const hooks = require('feathers-hooks');
 
 const errorHandler = require('feathers-errors/handler');
@@ -33,9 +33,9 @@ const app = feathers()
   .use(bodyParser.json())
   // Turn on URL-encoded parser for REST services
   .use(bodyParser.urlencoded({ extended: true }))
-  .configure( SimpleRESTService({
+  .configure( AutoService({
       connection,
-      prefix : 'restapi'
+      prefix : 'auto'
     }))
   .use(errorHandler());
 
@@ -54,4 +54,4 @@ app.use('/todos', fms({
 // Start the server
 module.exports = app.listen(3030);
 
-console.log('Feathers Todo memory service running on 127.0.0.1:3030');
+console.log('Feathers Todo Filemaker service running on 127.0.0.1:3030');
