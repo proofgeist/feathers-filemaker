@@ -135,13 +135,14 @@ The Simple REST Service generates a restful endpoint in the following form:
 
 The prefix can be passed in as part of configuration. ( see below )
 
+This will also work with WebSockets, but it's weird. TODO:examples
+
 ### Authentication
 
 Basic auth is the only option available to the Simple REST Service. JSONWeb Tokens currently won't work.
 
 ### Limitations
 
-No web sockets, and therefor no Realtime features.
 You can't use feathers hooks.
 
 ### How it works
