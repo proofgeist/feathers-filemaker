@@ -124,18 +124,20 @@ app.listen(port, function() {
   console.log(`Feathers server listening on port ${port}`);
 });
 ```
-### Simple REST Service
+### Auto Service
+
+EXPERIMENTAL - Use with caution.
 
 In addition to setting up services using normal feathers idioms as described above, you can simply expose a RESTFUL endpoint to all the databases on the server. This is super simple to setup. It covers many of the common scenarios that REST is used for, however it is less powerful than normal feathers services.
 
-The Simple REST Service generates a restful endpoint in the following form:
+The Auto Service serves a restful endpoint in the following form:
 
 * `http://<address>:<port>/<prefix>/db/layout`
 * `http://<address>:<port>/<prefix>/db/layout/id`
 
 The prefix can be passed in as part of configuration. ( see below )
 
-This will also work with WebSockets, but it's weird. TODO:examples
+This will also work with WebSockets, but it's weird. And is currently doesn't have authentication. TODO:examples
 
 ### Authentication
 
