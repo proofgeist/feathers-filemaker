@@ -9,6 +9,7 @@ websockets requires passing in path vars on the query
 * this might
 * */
 const socketfix = (hook)=>{
+
   if(hook.params.provider === 'socketio'){
 
     if(hook.params.query._db){
