@@ -10,7 +10,7 @@ const debug = makeDebug('fms');
 debug('loading');
 
 /**
- * cheap lodashe
+ * cheap lodash
  * @type {{pick: (function(*, ...[*]))}}
  * @private
  */
