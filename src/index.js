@@ -10,7 +10,7 @@ const debug = makeDebug('fms');
 debug('loading');
 
 /**
- * cheap lodash
+ * cheap lodashe
  * @type {{pick: (function(*, ...[*]))}}
  * @private
  */
@@ -36,7 +36,8 @@ const optionsSchema = Joi.object().keys({
     db : Joi.string().required(),
     user : Joi.string().required(),
     pass : Joi.any().default('')
-  })
+  }),
+  scriptService: [Joi.object()]
 });
 
 
