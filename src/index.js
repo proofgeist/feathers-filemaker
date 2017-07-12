@@ -25,20 +25,21 @@ const _ = {
 };
 
 
-const optionsSchema = Joi.object().keys({
-  model : Joi.object().required().keys({
-    layout : Joi.string().required(),
-    idField : Joi.string().default('id')
+var optionsSchema = Joi.object().keys({
+  model: Joi.object().required().keys({
+    layout: Joi.string().required(),
+    idField: Joi.string().default('id')
   }),
-  paginate : Joi.object(),
-  connection : Joi.object().required().keys({
-    host : Joi.string().required(),
-    db : Joi.string().required(),
-    user : Joi.string().required(),
-    pass : Joi.any().default('')
-  })
+  paginate: Joi.object(),
+  connection: Joi.object().required().keys({
+    host: Joi.string().required(),
+    db: Joi.string().required(),
+    user: Joi.string().required(),
+    pass: Joi.any().default('')
+  }),
+  scriptService: [Joi.object()],
+  id: [Joi.string().default('id')]
 });
-
 
 class Service {
   constructor(options = {}) {
@@ -52,6 +53,7 @@ class Service {
     this.paginate = options.paginate || {};
     this.connection = value.connection;
     this.model = value.model;
+    this.id = this.model.idField; 
 
     fms.setURL(this.connection.host);
   }
